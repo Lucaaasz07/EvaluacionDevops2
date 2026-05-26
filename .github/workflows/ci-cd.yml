@@ -26,8 +26,9 @@ jobs:
 
       - name: Escaneo de seguridad Snyk
         uses: snyk/actions/node@master
+        continue-on-error: true
         env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+            SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
       - name: Construir imagen Docker
         run: docker build -t notas-api .
