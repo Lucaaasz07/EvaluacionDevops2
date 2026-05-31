@@ -28,7 +28,8 @@ app.post("/notas", (req, res) => {
 });
 
 
-app.listen(3000, () => {
+const server = app.listen(3000, () => {
   console.log("Servidor corriendo en puerto 3000");
 });
 
+module.exports = server;
