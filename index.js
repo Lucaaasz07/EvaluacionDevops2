@@ -7,7 +7,6 @@ let notas = [];
 app.get("/", (req, res) => {
   res.json({ 
     mensaje: "Bienvenido Al cambio 1 📝",
-    mensaje: "Hola Mundo",
     version: "1.0.0",
     autor: "Lucas"
   });
