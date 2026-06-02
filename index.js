@@ -6,7 +6,7 @@ let notas = [];
 
 app.get("/", (req, res) => {
   res.json({ 
-    mensaje: "Bienvenido a la API de Notas 📝", 
+    mensaje: "Bienvenido Al cambio 1 📝", 
     version: "1.0.0",
     autor: "Lucas"
   });
