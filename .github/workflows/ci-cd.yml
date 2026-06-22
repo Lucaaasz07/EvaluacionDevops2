@@ -34,14 +34,22 @@ jobs:
         uses: sonarsource/sonarqube-scan-action@v6
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.projectKey=Lucaaasz07_EvaluacionDevops2
+            -Dsonar.organization=lucaaasz07
+            -Dsonar.sources=.
+            -Dsonar.exclusions=node_modules/**,coverage/**
+            -Dsonar.tests=tests
+            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
 
-      - name: Verificar Quality Gate (Falla Crítica IE6)
+      - name: Verificar Quality Gate 
         uses: sonarsource/sonarqube-quality-gate-action@v1.2.0
         timeout-minutes: 5
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-      - name: Escaneo de seguridad Snyk (Falla Crítica IE6)
+      - name: Escaneo de seguridad Snyk 
         uses: snyk/actions/node@master
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
