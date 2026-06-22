@@ -35,13 +35,7 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
-          args: >
-            -Dsonar.projectKey=Lucaaasz07_EvaluacionDevops2
-            -Dsonar.organization=lucaaasz07
-            -Dsonar.sources=.
-            -Dsonar.exclusions=node_modules/**,coverage/**
-            -Dsonar.tests=tests
-            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
+          projectBaseDir: .
 
       - name: Verificar Quality Gate 
         uses: sonarsource/sonarqube-quality-gate-action@v1.2.0
