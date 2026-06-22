@@ -3,7 +3,7 @@ name: CI-CD Pipeline
 on:
   push:
     branches:
-      - feature/login  
+      - feature/login   
   pull_request:
     branches:
       - feature/login   
@@ -17,7 +17,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0 
-
       - name: Configurar Node.js
         uses: actions/setup-node@v4
         with:
@@ -30,13 +29,14 @@ jobs:
       - name: Ejecutar pruebas con cobertura
         run: npm test -- --coverage 
 
+      
       - name: Analizar código con SonarQube Cloud
-        uses: SonarSource/sonarqube-scan-action@v5
+        uses: sonarsource/sonarqube-scan-action@v6
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
       - name: Verificar Quality Gate (Falla Crítica IE6)
-        uses: SonarSource/sonarqube-quality-gate-action@v1.2.0
+        uses: sonarsource/sonarqube-quality-gate-action@v1.2.0
         timeout-minutes: 5
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -52,6 +52,7 @@ jobs:
       - name: Verificar Docker Compose
         run: docker compose config
 
+      
       - name: Deploy a Render
         if: github.event_name == 'push' && github.ref == 'refs/heads/feature/login'
         run: |
