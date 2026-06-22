@@ -3,10 +3,10 @@ name: CI-CD Pipeline
 on:
   push:
     branches:
-      - main       
+      - feature/login  
   pull_request:
     branches:
-      - main       
+      - feature/login   
 
 jobs:
   build-and-test:
@@ -52,8 +52,7 @@ jobs:
       - name: Verificar Docker Compose
         run: docker compose config
 
-    
       - name: Deploy a Render
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: github.event_name == 'push' && github.ref == 'refs/heads/feature/login'
         run: |
           curl -X POST "https://api.render.com/deploy/srv-${{ secrets.RENDER_SERVICE_ID }}?key=${{ secrets.RENDER_API_KEY }}"
