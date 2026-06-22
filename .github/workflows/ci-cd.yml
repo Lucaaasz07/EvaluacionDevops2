@@ -39,11 +39,8 @@ jobs:
           fi
           echo "Calidad aprobada. Cero errores criticos."
 
-      - name: Analisis de seguridad Snyk
-        uses: snyk/actions/node@master
-        continue-on-error: true
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      - name: Auditoria de seguridad (npm audit)
+        run: npm audit --audit-level=critical
 
       - name: Crear imagen Docker
         run: docker build -t notas-api .
