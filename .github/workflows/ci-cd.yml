@@ -18,6 +18,9 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Marcar inicio del despliegue
+        run: echo "START_TIME=$(date +%s)" >> $GITHUB_ENV
+
       - name: Instalar Node 22
         uses: actions/setup-node@v4
         with:
@@ -29,6 +32,20 @@ jobs:
 
       - name: Correr tests con cobertura
         run: npm test -- --coverage
+
+      - name: Configurar credenciales AWS
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Enviar cobertura a CloudWatch
+        run: |
+          COVERAGE=$(node -p "require('./coverage/coverage-summary.json').total.lines.pct")
+          echo "Cobertura: $COVERAGE%"
+          aws cloudwatch put-metric-data --namespace "MicroservicioNotas" --metric-name "CoveragePercent" --value "$COVERAGE" --unit Percent
 
       - name: Auditoria local de calidad
         run: |
@@ -52,3 +69,10 @@ jobs:
         if: github.event_name == 'push' && github.ref == 'refs/heads/feature/login'
         run: |
           curl -X POST "https://api.render.com/deploy/srv-${{ secrets.RENDER_SERVICE_ID }}?key=${{ secrets.RENDER_API_KEY }}"
+
+      - name: Enviar tiempo de despliegue a CloudWatch
+        run: |
+          END_TIME=$(date +%s)
+          DURATION=$((END_TIME - START_TIME))
+          echo "Duracion del pipeline: $DURATION segundos"
+          aws cloudwatch put-metric-data --namespace "MicroservicioNotas" --metric-name "DeploymentTimeSeconds" --value "$DURATION" --unit Seconds
