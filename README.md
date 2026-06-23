@@ -10,7 +10,7 @@ Microservicio desarrollado con Node.js y Express que permite gestionar notas med
 - Docker Compose
 - GitHub Actions
 - Dependabot
-- Snyk
+
 
 ## Docker
 La aplicación se encuentra contenerizada mediante Docker utilizando un Dockerfile.
@@ -43,9 +43,7 @@ El pipeline implementado en GitHub Actions realiza:
 
 ## Seguridad
 
-Se utilizó Snyk para analizar las dependencias del proyecto y detectar posibles vulnerabilidades. Además, Dependabot permite monitorear y mantener actualizadas las dependencias utilizadas.
-
-Actualmente Snyk genera reportes de seguridad durante la ejecución del pipeline, mientras que en un entorno productivo podría configurarse para bloquear despliegues con vulnerabilidades críticas.
+Se utiliza `npm audit` para analizar las dependencias del proyecto. Si se detecta una vulnerabilidad crítica, el pipeline falla y se detiene automáticamente, evitando que código inseguro llegue a producción. Dependabot mantiene las dependencias actualizadas de forma semanal.
 
 ## Trazabilidad
 
