@@ -40,6 +40,20 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
           aws-region: ${{ secrets.AWS_REGION }}
+          
+      - name: Deploy automatico a EC2
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+            host: ${{ secrets.EC2_HOST }}
+            username: ec2-user
+            key: ${{ secrets.EC2_SSH_KEY }}
+            script: |
+              cd EvaluacionDevops2
+              git pull origin feature/login
+              docker build -t lucpizarroh/notas-api:latest .
+              docker push lucpizarroh/notas-api:latest
+              sudo k3s kubectl rollout restart deployment notas-api 
+        
 
       - name: Enviar cobertura a CloudWatch
         run: |
