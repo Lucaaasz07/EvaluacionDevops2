@@ -10,7 +10,7 @@ on:
 
 jobs:
   build-and-test:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
       - name: Clonar repo
@@ -40,6 +40,8 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
           aws-region: ${{ secrets.AWS_REGION }}
+          
+        
 
       - name: Enviar cobertura a CloudWatch
         run: |
@@ -65,14 +67,14 @@ jobs:
       - name: Validar Docker Compose
         run: docker compose config
 
-      - name: Deploy automatico a Render
-        if: github.event_name == 'push' && github.ref == 'refs/heads/feature/login'
-        run: |
-          curl -X POST "https://api.render.com/deploy/srv-${{ secrets.RENDER_SERVICE_ID }}?key=${{ secrets.RENDER_API_KEY }}"
-
       - name: Enviar tiempo de despliegue a CloudWatch
         run: |
           END_TIME=$(date +%s)
           DURATION=$((END_TIME - START_TIME))
           echo "Duracion del pipeline: $DURATION segundos"
           aws cloudwatch put-metric-data --namespace "MicroservicioNotas" --metric-name "DeploymentTimeSeconds" --value "$DURATION" --unit Seconds
+      - name: Deploy a K3s
+        run: |
+          docker build -t lucpizarroh/notas-api:latest .
+          docker push lucpizarroh/notas-api:latest
+          sudo k3s kubectl rollout restart deployment notas-api
