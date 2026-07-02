@@ -6,7 +6,7 @@ let notas = [];
 
 app.get("/", (req, res) => {
   res.json({ 
-    mensaje: "Bienvenido Al cambio numero 23",
+    mensaje: "Bienvenido Al cambio numero 24 :D",
     version: "1.0.0",
     autor: "Lucas"
   });
